@@ -75,9 +75,12 @@ set display+=lastline   " Show as much as possible from the last shown line.
 set textwidth=0         " Don't automatically wrap lines.
 
 " 80 characters line
-"set colorcolumn=81
-"execute "set colorcolumn=" . join(range(81,335), ',')
-"highlight ColorColumn ctermbg=Black ctermfg=DarkRed
+execute "set colorcolumn=" . join(range(81,335), ',')
+highlight ColorColumn ctermbg=Black ctermfg=DarkRed
+set textwidth=0
+if exists('&colorcolumn')
+	set colorcolumn=80
+endif
 
 " Highlight trailing spaces
 " " http://vim.wikia.com/wiki/Highlight_unwanted_spaces
@@ -168,15 +171,20 @@ nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>w :Windows<CR>
 nnoremap <silent> <leader>l :BLines<CR>
 nnoremap <silent> <leader>? :History<CR>
+nnoremap <silent> <Leader>C :Colors<CR>
 "nnoremap <silent> <leader>/ :execute 'Ag ' . input('Ag/')<CR>
 "nnoremap <silent> <leader>. :AgIn<space>
 nnoremap <silent> <leader>/ :execute 'Rg ' . input('Rg/')<CR>
 nnoremap <silent> <leader>. :RgIn<space>
 
-"------------------------------------------------------------------------------
-" FZF vim
-"------------------------------------------------------------------------------
-"
+" Hide statusline of terminal buffer
+autocmd! FileType fzf
+autocmd  FileType fzf set laststatus=0 noshowmode noruler
+  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
 " [Tags] Command to generate tags file
 let g:fzf_tags_command = 'ctags -R'
 
@@ -217,7 +225,7 @@ imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Advanced customization using autoload functions
-inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '13%'})
+" inoremap <expr> <c-x><c-k> fzf#vim#complete#word({'left': '15%'})
 
 set complete=.,w,b,u
 
@@ -253,16 +261,11 @@ set complete=.,w,b,u
 " --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 " --color: Search color options
 
-nnoremap <silent> S :call SearchWordWithRg()<CR>
-function! SearchWordWithRg()
-  execute 'Rg' expand('<cword>')
-endfunction
-
 command! -nargs=+ -complete=dir RgIn call s:rg_in(<f-args>)
 
-command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --no-ignore --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>), 1, <bang>0)
 
-"   :Rg  - Start fzf with hidden preview window that can be enabled with "?" key
+"   :Rg  - Start fzf with hidden preview window that can be enabled with '?' key
 "   :Rg! - Start fzf in fullscreen and display the preview window above
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
@@ -270,6 +273,11 @@ command! -bang -nargs=* Rg
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
+
+nnoremap <silent> S :call SearchWordWithRg()<CR>
+function! SearchWordWithRg()
+  execute 'Rg' expand('<cword>')
+endfunction
 
 "------------------------------------------------------------------------------
 
