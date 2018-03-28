@@ -1,0 +1,7 @@
+**/linux-4.10.1/
+**/linux-4.7/
+**/tags
+**/supported_host/
+**.unc-backup*
+**/linux-4.14-rc6/
+#**/linux-4.14/
