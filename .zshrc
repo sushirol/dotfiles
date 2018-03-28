@@ -12,7 +12,7 @@ LC_CTYPE=en_US.UTF-8
 #export FZF_DEFAULT_COMMAND='ag -g ""'
 #export FZF_DEFAULT_COMMAND='ag --hidden --ignore linux-4.10.1 -g ""'
 #export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git/*"'
-export FZF_DEFAULT_COMMAND='rg --files --glob ""'
+#export FZF_DEFAULT_COMMAND='rg --files --glob ""'
 
 # Setup cdg function
 # ------------------
@@ -127,3 +127,68 @@ function git_prompt_info() {
 }
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTS='--height 45% --reverse --border --inline-info'
+#export FZF_COMPLETION_TRIGGER=''
+#export FZF_COMPLETION_TRIGGER='**'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+
+bindkey '^T' fzf-completion
+
+_fzf_compgen_path() {
+  fd --hidden --follow --exclude ".git" . "$1"
+}
+
+_fzf_compgen_dir() {
+  fd --type d --hidden --follow --exclude ".git" . "$1"
+}
+
+_fzf_complete_git() {
+    ARGS="$@"
+    local branches
+    branches=$(git branch -vv --all)
+    if [[ $ARGS == 'git branch'* ]] || [[ $ARGS == 'git checkout'* ]]; then
+        _fzf_complete "--reverse --multi" "$@" < <(
+            echo $branches
+        )
+    else
+        eval "zle ${fzf_default_completion:-expand-or-complete}"
+    fi
+}
+
+_fzf_complete_git_post() {
+    awk '{print $1}'
+}
+
+_fzf_complete_wd() {
+    ARGS="$@"
+    local warp_points
+    warp_points=$(wd list | rg -v "warp points")
+	_fzf_complete "--reverse --multi" "$@" < <(echo $warp_points)
+}
+
+_fzf_complete_wd_post() {
+  awk '{print $1}'
+}
+
+_fzf_complete_yadm() {
+    ARGS="$@"
+    local dotfiles
+	case $ARGS in
+		'yadm add'*)
+			dotfiles=$(yadm status | grep -w "modified:")
+			_fzf_complete "--reverse --multi" "$@" < <(echo $dotfiles)
+			;;
+		'yadm diff'*)
+			dotfiles=$(yadm status | grep -w "modified:")
+			_fzf_complete "--reverse --multi" "$@" < <(echo $dotfiles)
+			;;
+	esac
+
+}
+
+_fzf_complete_yadm_post() {
+  awk '{print $2}'
+}
