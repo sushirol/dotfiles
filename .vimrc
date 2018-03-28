@@ -7,9 +7,25 @@
 " Pathogen (http://www.vim.org/scripts/script.php?script_id=2332).
 "------------------------------------------------------------------------------
 "
-filetype off " Pathogen needs to run before 'plugin on'.
-execute pathogen#infect()
-filetype plugin on
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'scrooloose/nerdcommenter',
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'easymotion/vim-easymotion'
+Plug 'vim-scripts/ZoomWin'
+Plug 'BurntSushi/ripgrep'
+Plug 'ntpeters/vim-better-whitespace'
+" Themes
+Plug 'NLKNguyen/papercolor-theme'
+call plug#end()
 
 " The leader and local-leader characters.
 let mapleader = ' '
@@ -44,10 +60,6 @@ set nowritebackup       " Disable auto backup before overwriting a file.
 " Line numbers.
 set number              " Show line numbers.
 set relativenumber      " Show relative numbers instead of absolute ones.
-
-" Splitting.
-set splitright          " Open new vertical panes in the right rather than left.
-set splitbelow          " Open new horizontal panes in the bottom rather than top.
 
 " Whitespace.
 set autoindent
@@ -90,15 +102,6 @@ highlight fzf2 ctermfg=23 ctermbg=251
 highlight fzf3 ctermfg=237 ctermbg=251
 set statusline+=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
 
-" Path/file/command completion.
-set wildmenu
-set wildchar=<Tab>
-set wildmode=list:longest
-set wildignore+=*.o,*.obj,*.pyc,*.aux,*.bbl,*.blg,.git,.svn,.hg
-" Suffixes that get lower priority when doing tab completion for filenames.
-" These files are less likely to be edited.
-set suffixes=.bak,~,.swp,.o,.info,.aux,.bbl,.blg,.brf,.cb,.ind,.idx,.ilg,.inx,.out,.toc
-
 " Searching.
 set hlsearch            " Highlight search matches.
 set incsearch           " Incremental search.
@@ -129,14 +132,14 @@ vnoremap > >gv
 noremap gV `[v`]
 
 " Disable arrows keys (I use exclusively h/j/k/l).
-" noremap <Up> <Nop>
-" noremap <Down> <Nop>
-" noremap <Left> <Nop>
-" noremap <Right> <Nop>
-" inoremap <Up> <Nop>
-" inoremap <Down> <Nop>
-" inoremap <Left> <Nop>
-" inoremap <Right> <Nop>
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+inoremap <Up> <Nop>
+inoremap <Down> <Nop>
+inoremap <Left> <Nop>
+inoremap <Right> <Nop>
 
 " Make Y yank everything from the cursor to the end of the line.
 " This makes Y act more like C or D because by default, Y yanks the current
@@ -146,26 +149,14 @@ noremap Y y$
 " Check for changes in all buffers, automatically reload them, and redraw.
 nnoremap <silent> <Leader>rr :set autoread <Bar> checktime <Bar> redraw! <Bar> set noautoread<CR>
 
-" Replaces the current word (and all occurrences).
-nnoremap <Leader>rc :%s/\<<C-r><C-w>\>/
-vnoremap <Leader>rc y:%s/<C-r>"/
-
-" Changes the current word (and all occurrences).
-nnoremap <Leader>ec :%s/\<<C-r><C-w>\>/<C-r><C-w>
-vnoremap <Leader>ec y:%s/<C-r>"/<C-r>"
-
 " Opening files in tabs.
-nnoremap <Leader>bash :e ~/.bashrc<CR>
+nnoremap <Leader>zsh :e ~/.zshrc<CR>
 nnoremap <Leader>vim :e ~/.vimrc<CR>
 nnoremap <Leader>tmux :e ~/.tmux.conf<CR>
 
 "------------------------------------------------------------------------------
 " Plugins.
 "------------------------------------------------------------------------------
-"
-"" QF
-autocmd! FileType qf nnoremap <buffer> <leader><Enter> <C-w><Enter><C-w>L
-"autocmd FileType python noexpandtab
 
 "------------------------------------------------------------------------------
 " FZF.
@@ -290,8 +281,6 @@ nnoremap :Set :set
 nnoremap :Vsp :vsp
 cmap w!! w !sudo tee >/dev/null %
 
-set pastetoggle=<F10>
-
 "------------------------------------------------------------------------------
 " Theme
 "------------------------------------------------------------------------------
@@ -299,8 +288,8 @@ set pastetoggle=<F10>
 set t_Co=256   " This is may or may not needed.
 
 "set background=light
-set background=dark
-colorscheme PaperColor
+ set background=dark
+ colorscheme PaperColor
 "colorscheme gruvbox
 "let g:lightline = { 'colorscheme': 'PaperColor' }
 "let g:lightline = { 'colorscheme': 'gruvbox' }
@@ -324,6 +313,6 @@ endif
 
 "--------------------------------------------------------------------------------
 " Tell vim-whitespace to strip whitespace on save
-au VimEnter * EnableStripWhitespaceOnSave
+"au VimEnter * EnableStripWhitespaceOnSave
 " Tell vim-whitespace to disable the current line highlightin
-au VimEnter * CurrentLineWhitespaceOff soft
+"au VimEnter * CurrentLineWhitespaceOff soft
