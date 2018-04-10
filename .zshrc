@@ -128,10 +128,11 @@ function git_prompt_info() {
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_COMMAND='fd --ignore-file $HOME/.ignore --color auto --type f'
+#export FZF_DEFAULT_COMMAND='fd --type f'
 export FZF_DEFAULT_OPTS='--height 45% --reverse --border --inline-info'
 #export FZF_COMPLETION_TRIGGER=''
-#export FZF_COMPLETION_TRIGGER='**'
+export FZF_COMPLETION_TRIGGER='**'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 
