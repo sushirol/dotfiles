@@ -23,8 +23,11 @@ Plug 'easymotion/vim-easymotion'
 Plug 'vim-scripts/ZoomWin'
 Plug 'BurntSushi/ripgrep'
 Plug 'ntpeters/vim-better-whitespace'
+Plug 'tpope/vim-unimpaired'
 " Themes
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
 " The leader and local-leader characters.
@@ -47,7 +50,7 @@ set magic               " Use 'magic' patterns (extended regular expressions).
 set hidden              " Allow switching edited buffers without saving.
 set nostartofline       " Keep the cursor in the current column with page cmds.
 set nojoinspaces        " Insert just one space joining lines with J.
-set showcmd             " Show (partial) command in the status line.
+"set showcmd             " Show (partial) command in the status line.
 set showmode            " Show the current mode.
 set path=$PWD/**        " Include everything under $PWD into the path.
 set nrformats-=octal    " Make incrementing 007 result into 008 rather than 010.
@@ -91,19 +94,25 @@ autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
 
-" Statusline.
-set laststatus=2        " Always display a statusline.
-set statusline=%<%f                          " Path to the file in the buffer.
-set statusline+=\ %h%w%m%r%k                 " Flags (e.g. [+], [RO]).
-set statusline+=\ [%{(&fenc\ ==\"\"?&enc:&fenc).(&bomb?\",BOM\":\"\")},%{&ff}] " Encoding and line endings.
-set statusline+=\ %y                         " File type.
-set statusline+=\ [\%03.3b,0x\%02.2B,U+%04B] " Codes of the character under cursor.
-set statusline+=\ [%l/%L\ (%p%%),%v]         " Line and column numbers.
+" Airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline_theme='distinguished'
+let g:airline_powerline_fonts = 1
 
-highlight fzf1 ctermfg=161 ctermbg=251
-highlight fzf2 ctermfg=23 ctermbg=251
-highlight fzf3 ctermfg=237 ctermbg=251
-set statusline+=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
+" Statusline.
+"set laststatus=2        " Always display a statusline.
+"set statusline=%<%f                          " Path to the file in the buffer.
+"set statusline+=\ %h%w%m%r%k                 " Flags (e.g. [+], [RO]).
+"set statusline+=\ [%{(&fenc\ ==\"\"?&enc:&fenc).(&bomb?\",BOM\":\"\")},%{&ff}] " Encoding and line endings.
+"set statusline+=\ %y                         " File type.
+"set statusline+=\ [\%03.3b,0x\%02.2B,U+%04B] " Codes of the character under cursor.
+"set statusline+=\ [%l/%L\ (%p%%),%v]         " Line and column numbers.
+
+"highlight fzf1 ctermfg=161 ctermbg=251
+"highlight fzf2 ctermfg=23 ctermbg=251
+"highlight fzf3 ctermfg=237 ctermbg=251
+"set statusline+=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
 
 " Searching.
 set hlsearch            " Highlight search matches.
@@ -178,9 +187,9 @@ nnoremap <silent> <leader>/ :execute 'Rg ' . input('Rg/')<CR>
 nnoremap <silent> <leader>. :RgIn<space>
 
 " Hide statusline of terminal buffer
-autocmd! FileType fzf
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
+"autocmd! FileType fzf
+"autocmd  FileType fzf set laststatus=0 noshowmode noruler
+  "\| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
 
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
