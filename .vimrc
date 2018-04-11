@@ -24,8 +24,11 @@ Plug 'vim-scripts/ZoomWin'
 Plug 'BurntSushi/ripgrep'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-fugitive'
 " Themes
+Plug 'NLKNguyen/c-syntax.vim'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 call plug#end()
@@ -93,12 +96,6 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-
-" Airline
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_theme='distinguished'
-let g:airline_powerline_fonts = 1
 
 " Statusline.
 "set laststatus=2        " Always display a statusline.
@@ -202,6 +199,7 @@ command! -bang Colors
 
 "" This is the default extra key bindings
 let g:fzf_action = {
+  \ 'ctrl-q': 'wall | bdelete',
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-x': 'split',
   \ 'ctrl-v': 'vsplit' }
@@ -305,11 +303,15 @@ cmap w!! w !sudo tee >/dev/null %
 set t_Co=256   " This is may or may not needed.
 
 "set background=light
- set background=dark
- colorscheme PaperColor
+set background=dark
+colorscheme PaperColor
 "colorscheme gruvbox
-"let g:lightline = { 'colorscheme': 'PaperColor' }
-"let g:lightline = { 'colorscheme': 'gruvbox' }
+
+" Airline
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline_theme='distinguished'
+let g:airline_powerline_fonts = 1
 
 " ------------------------------------------------------------------------------
 "  persistant undo
@@ -333,3 +335,10 @@ endif
 "au VimEnter * EnableStripWhitespaceOnSave
 " Tell vim-whitespace to disable the current line highlightin
 "au VimEnter * CurrentLineWhitespaceOff soft
+"
+"------------------------------------------------------------------------------
+" Fugitive
+"------------------------------------------------------------------------------
+nmap     <Leader>gs :Gstatus<CR>gg<c-n>
+nnoremap <Leader>d :Gdiff<CR>
+nnoremap <Leader>gl :Glog<CR>
