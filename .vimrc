@@ -25,6 +25,7 @@ Plug 'BurntSushi/ripgrep'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
 " Themes
 Plug 'NLKNguyen/c-syntax.vim'
 Plug 'NLKNguyen/papercolor-theme'
