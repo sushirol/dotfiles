@@ -26,12 +26,14 @@ Plug 'ntpeters/vim-better-whitespace'
 Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
+Plug 'christoomey/vim-tmux-navigator'
 " Themes
 Plug 'NLKNguyen/c-syntax.vim'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'edkolev/tmuxline.vim'
 call plug#end()
 
 " The leader and local-leader characters.
@@ -71,8 +73,8 @@ set relativenumber      " Show relative numbers instead of absolute ones.
 " Whitespace.
 set autoindent
 set noexpandtab         " Do not expand tab with spaces.
-set tabstop=4           " Number of spaces a tab counts for.
-set shiftwidth=4        " Number of spaces to use for each step of indent.
+"set tabstop=4           " Number of spaces a tab counts for.
+"set shiftwidth=4        " Number of spaces to use for each step of indent.
 set shiftround          " Round indent to multiple of shiftwidth.
 
 " Wrapping.
@@ -313,6 +315,8 @@ let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_theme='distinguished'
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#tmuxline#enabled = 1
+let airline#extensions#tmuxline#snapshot_file = "~/.tmux-status.conf"
 
 " ------------------------------------------------------------------------------
 "  persistant undo
@@ -343,3 +347,14 @@ endif
 nmap     <Leader>gs :Gstatus<CR>gg<c-n>
 nnoremap <Leader>d :Gdiff<CR>
 nnoremap <Leader>gl :Glog<CR>
+
+"
+"nnoremap <silent> <S-Left> :wincmd h<CR>
+"nnoremap <silent> <S-Right> :wincmd l<CR>
+"
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <S-Left> :TmuxNavigateLeft<cr>
+nnoremap <silent> <S-Right> :TmuxNavigateRight<cr>
+nnoremap <silent> <S-Up> :TmuxNavigateUp<cr>
+nnoremap <silent> <S-Down> :TmuxNavigateDown<cr>
