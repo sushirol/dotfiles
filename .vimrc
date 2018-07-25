@@ -358,3 +358,5 @@ nnoremap <silent> <S-Left> :TmuxNavigateLeft<cr>
 nnoremap <silent> <S-Right> :TmuxNavigateRight<cr>
 nnoremap <silent> <S-Up> :TmuxNavigateUp<cr>
 nnoremap <silent> <S-Down> :TmuxNavigateDown<cr>
+
+autocmd BufNewFile,BufRead /home/sushrut/workspace/acadia_kernel/*/pavilion/target/* setlocal expandtab ts=4 sw=4
