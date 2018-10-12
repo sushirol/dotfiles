@@ -1,6 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$PATH:$HOME/.local/bin/
+export PATH=$PATH:$HOME/.local/bin/:$HOME/bin
 source /opt/rust/env
 
 # Path to your oh-my-zsh installation.
@@ -67,7 +67,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(zsh-autosuggestions zsh-syntax-highlighting colorize git vi-mode cp wd fabric)
+plugins=(zsh-autosuggestions zsh-syntax-highlighting colorize git vi-mode cp wd fabric tmux)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -99,6 +99,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias ctags="ctags -R --exclude=linux-4.14 --exclude=linux-4.10.1"
 export TERM=screen-256color
 
 function git_prompt_info() {

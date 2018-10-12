@@ -27,6 +27,8 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'majutsushi/tagbar'
+Plug 'airblade/vim-gitgutter'
 " Themes
 Plug 'NLKNguyen/c-syntax.vim'
 Plug 'NLKNguyen/papercolor-theme'
@@ -279,7 +281,7 @@ command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-h
 "   :Rg! - Start fzf in fullscreen and display the preview window above
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   'rg -i --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
   \   <bang>0 ? fzf#vim#with_preview('up:60%')
   \           : fzf#vim#with_preview('right:50%:hidden', '?'),
   \   <bang>0)
@@ -312,6 +314,7 @@ colorscheme PaperColor
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline_theme='distinguished'
 let g:airline_powerline_fonts = 1
@@ -359,4 +362,8 @@ nnoremap <silent> <S-Right> :TmuxNavigateRight<cr>
 nnoremap <silent> <S-Up> :TmuxNavigateUp<cr>
 nnoremap <silent> <S-Down> :TmuxNavigateDown<cr>
 
+" DMS needs 4spaces. 
 autocmd BufNewFile,BufRead /home/sushrut/workspace/acadia_kernel/*/pavilion/target/* setlocal expandtab ts=4 sw=4
+
+"Tagbar
+nmap <leader>rt :TagbarToggle<CR>
