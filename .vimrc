@@ -33,6 +33,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'NLKNguyen/c-syntax.vim'
 Plug 'NLKNguyen/papercolor-theme'
 Plug 'morhetz/gruvbox'
+Plug 'junegunn/seoul256.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'edkolev/tmuxline.vim'
@@ -362,8 +363,14 @@ nnoremap <silent> <S-Right> :TmuxNavigateRight<cr>
 nnoremap <silent> <S-Up> :TmuxNavigateUp<cr>
 nnoremap <silent> <S-Down> :TmuxNavigateDown<cr>
 
-" DMS needs 4spaces. 
+" DMS needs 4spaces.
 autocmd BufNewFile,BufRead /home/sushrut/workspace/acadia_kernel/*/pavilion/target/* setlocal expandtab ts=4 sw=4
 
 "Tagbar
 nmap <leader>rt :TagbarToggle<CR>
+
+"------------------------------------------------------------------------------
+set encoding=UTF-8
+
+set cursorline
+:hi CursorLine cterm=NONE guibg=Grey40
