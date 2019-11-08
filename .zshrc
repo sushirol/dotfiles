@@ -21,6 +21,9 @@ source $ZSH/oh-my-zsh.sh
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias ctags="ctags -R --exclude=linux-4.14 --exclude=linux-4.10.1"
+alias l="exa -lahF"
+alias find="fd"
+
 export TERM=screen-256color
 
 function git_prompt_info() {
