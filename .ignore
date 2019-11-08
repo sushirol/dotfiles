@@ -4,3 +4,4 @@ tags
 supported_host
 .unc-backup*
 cscope.out
+*.o
