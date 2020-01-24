@@ -292,6 +292,12 @@ function! SearchWordWithRg()
   execute 'Rg' expand('<cword>')
 endfunction
 
+" The query history for this command will be stored as 'ls' inside g:fzf_history_dir.
+" The name is ignored if g:fzf_history_dir is not defined.
+command! -bang -complete=dir -nargs=* LS
+    \ call fzf#run(fzf#wrap('ls', {'source': 'ls', 'dir': <q-args>}, <bang>0))
+
+
 "------------------------------------------------------------------------------
 
 " Command mistypes.
@@ -316,11 +322,17 @@ colorscheme PaperColor
 " Airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tagbar#enabled = 1
-let g:airline#extensions#tabline#formatter = 'unique_tail'
+"let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline_theme='distinguished'
+"let g:airline_theme='minimalist'
+"let g:airline_theme='badcat'
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tmuxline#enabled = 1
 let airline#extensions#tmuxline#snapshot_file = "~/.tmux-status.conf"
+let g:airline_section_y = ''
+let g:airline_section_error = ''
+let g:airline_section_warning = ''
 
 " ------------------------------------------------------------------------------
 "  persistant undo
@@ -374,3 +386,7 @@ set encoding=UTF-8
 
 set cursorline
 :hi CursorLine cterm=NONE guibg=Grey40
+
+augroup filetypedetect
+	au BufRead,BufNewFile *.log set filetype=messages
+augroup END

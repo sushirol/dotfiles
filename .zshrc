@@ -1,6 +1,6 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$PATH:$HOME/.local/bin/:$HOME/bin:$HOME/.cargo/bin
+export PATH=/usr/local/bin:$PATH:$HOME/.local/bin/:$HOME/bin:$HOME/.cargo/bin
 source /opt/rust/env
 
 export ZSH=/home/sushrut/.oh-my-zsh
@@ -15,14 +15,14 @@ ENABLE_CORRECTION="true"
 
 #DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-plugins=(zsh-autosuggestions zsh-syntax-highlighting colorize git vi-mode cp wd fabric tmux fzf-git)
+plugins=(zsh-autosuggestions zsh-syntax-highlighting colorize git vi-mode cp wd fabric tmux fzf-git fzf)
 source $ZSH/oh-my-zsh.sh
 
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 alias ctags="ctags -R --exclude=linux-4.14 --exclude=linux-4.10.1"
 alias l="exa -lahF"
-alias find="fd"
+alias find="fd --no-ignore"
 
 export TERM=screen-256color
 
@@ -35,7 +35,7 @@ function git_prompt_info() {
 
 export FZF_DEFAULT_COMMAND='fd --ignore-file $HOME/.ignore --color auto --type f'
 #export FZF_DEFAULT_COMMAND='fd --type f'
-export FZF_DEFAULT_OPTS='--height 45% --reverse --border --inline-info'
+export FZF_DEFAULT_OPTS='--bind alt-j:down,alt-k:up --height 45% --reverse --border --inline-info'
 #export FZF_COMPLETION_TRIGGER=''
 export FZF_COMPLETION_TRIGGER='**'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
