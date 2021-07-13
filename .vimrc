@@ -18,7 +18,6 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdcommenter',
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'easymotion/vim-easymotion'
 Plug 'vim-scripts/ZoomWin'
 Plug 'BurntSushi/ripgrep'
@@ -29,9 +28,13 @@ Plug 'tpope/vim-surround'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'majutsushi/tagbar'
 Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/vim-peekaboo'
+Plug 'basilsaji/vim-signify'
+Plug 'tpope/vim-sleuth'
 " Themes
 Plug 'NLKNguyen/c-syntax.vim'
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'daylerees/colour-schemes'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/seoul256.vim'
 Plug 'vim-airline/vim-airline'
@@ -75,7 +78,7 @@ set relativenumber      " Show relative numbers instead of absolute ones.
 
 " Whitespace.
 set autoindent
-set noexpandtab         " Do not expand tab with spaces.
+"set noexpandtab         " Do not expand tab with spaces.
 "set tabstop=4           " Number of spaces a tab counts for.
 "set shiftwidth=4        " Number of spaces to use for each step of indent.
 set shiftround          " Round indent to multiple of shiftwidth.
@@ -84,12 +87,12 @@ set shiftround          " Round indent to multiple of shiftwidth.
 set wrap                " Enable text wrapping.
 set linebreak           " Break after words only.
 set display+=lastline   " Show as much as possible from the last shown line.
-set textwidth=0         " Don't automatically wrap lines.
+"set textwidth=0         " Don't automatically wrap lines.
 
 " 80 characters line
 execute "set colorcolumn=" . join(range(81,335), ',')
 highlight ColorColumn ctermbg=Black ctermfg=DarkRed
-set textwidth=0
+"set textwidth=0
 if exists('&colorcolumn')
 	set colorcolumn=80
 endif
@@ -317,7 +320,12 @@ set t_Co=256   " This is may or may not needed.
 "set background=light
 set background=dark
 colorscheme PaperColor
+"colorscheme seoul256
 "colorscheme gruvbox
+
+"only for seoul256 theme
+let g:seoul256_background = 234
+let g:seoul256_light_background = 256
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
@@ -375,9 +383,6 @@ nnoremap <silent> <S-Right> :TmuxNavigateRight<cr>
 nnoremap <silent> <S-Up> :TmuxNavigateUp<cr>
 nnoremap <silent> <S-Down> :TmuxNavigateDown<cr>
 
-" DMS needs 4spaces.
-autocmd BufNewFile,BufRead /home/sushrut/workspace/acadia_kernel/*/pavilion/target/* setlocal expandtab ts=4 sw=4
-
 "Tagbar
 nmap <leader>rt :TagbarToggle<CR>
 
@@ -390,3 +395,42 @@ set cursorline
 augroup filetypedetect
 	au BufRead,BufNewFile *.log set filetype=messages
 augroup END
+
+" Include Arista-specific settings
+:if filereadable( $VIM . "/vimfiles/arista.vim" )
+   source $VIM/vimfiles/arista.vim
+:endif
+
+" Put your own customizations below
+map ag :AGid <CR>
+map open :AOpened <CR>
+map diff :ADiff <CR>
+map edit :A4edit <CR>
+
+" Put your own customizations below
+let g:goImportsOnWrite = 0
+let g:goFmtOnWrite = 0
+let g:silentGoFormatting = 1
+
+
+" NerdTree
+nnoremap <leader>n :NERDTreeFocus<CR>
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+
+" Start NERDTree. If a file is specified, move the cursor to its window.
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * NERDTree | if argc() > 0 || exists("s:std_in") | wincmd p | endif
+
+" Exit Vim if NERDTree is the only window left.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+    \ quit | endif
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+
+" Vim selection into our internal pb.
+" This allows for running :Pb as a command instead, which takes a range of lines (including visual selections and %)
+command! -range Pb <line1>,<line2>w !curl -s -F c=@- pb
