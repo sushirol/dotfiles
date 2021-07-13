@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # install zplug if required
 ! [[ -d $HOME/.zplug ]] && curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh| zsh
 
@@ -6,22 +13,32 @@
 
 # fuzzy filtering
 zplug "junegunn/fzf", as:command, hook-build:"./install --bin", use:"bin/{fzf-tmux,fzf}"
+zplug "bhilburn/powerlevel9k"
 
 #Themes
 if [ -z $WP ]
 then
    # prezto
    zplug "modules/prompt", from:prezto
-   #zplug "sorin-ionescu/prezto", \
-      #use:"init.zsh", \
-      #hook-build:"ln -s $ZPLUG_HOME/repos/sorin-ionescu/prezto ~/.zprezto"
-   zplug "sorin-ionescu/prezto"
+   zplug "sorin-ionescu/prezto", \
+      use:"init.zsh", \
+      hook-build:"ln -s $ZPLUG_HOME/repos/sorin-ionescu/prezto ~/.zprezto"
+   #zplug "sorin-ionescu/prezto"
    source "$HOME/.zprezto/init.zsh"
 else
    DRACULA_ARROW_ICON="❯"
    DRACULA_DISPLAY_CONTEXT=1
    zplug 'dracula/zsh', as:theme
 fi
+
+zplug "modules/history",    from:prezto
+zplug "modules/utility",    from:prezto
+zplug "modules/ssh",        from:prezto
+zplug "modules/terminal",   from:prezto
+zplug "modules/directory",  from:prezto
+
+zplug "zsh-users/zsh-completions", defer:0
+zplug "zsh-users/zsh-autosuggestions", defer:2, on:"zsh-users/zsh-completions"
 
 #fzf
 source ~/.zplug/repos/junegunn/fzf/shell/completion.zsh
@@ -58,4 +75,8 @@ export P4MERGE=amergeVim
 zplug load --verbose
 set -o emacs
 
-source /home/sushrut/arScripts/ar_zshrc
+[ -d "/home/sushrut/arScripts/" ] && source /home/sushrut/arScripts/ar_zshrc
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+prompt sorin
