@@ -1,0 +1,161 @@
+# .bashrc
+
+#if [ -n "$TMUX" ]; then
+  #export TERM=tmux-256color
+  #export COLORTERM=truecolor
+#fi
+
+# Append to history immediately after each command
+PROMPT_COMMAND='history -a; history -n'
+
+# Optional: increase history size
+HISTSIZE=100000
+HISTFILESIZE=200000
+shopt -s histappend
+
+[ -z ${PLATFORM+x} ] && export PLATFORM=$(uname -s)
+
+# Source global definitions
+[ -f /etc/bashrc ] && . /etc/bashrc
+
+[ -f "${BASH_SOURCE[0]}" ] && BASE=$(dirname "$(readlink "${BASH_SOURCE[0]}")") ||
+	  BASE=$(dirname "$(readlink ~/.bashrc)")
+
+# Options
+# --------------------------------------------------------------------
+
+### Check the window size after each command ($LINES, $COLUMNS)
+shopt -s checkwinsize
+
+### Better-looking less for binary files
+[ -x /usr/bin/lesspipe    ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+
+if [ "$(uname -m)" == "aarch64" ]; then
+	return
+fi
+
+### Bash completion
+[ -f /etc/bash_completion ] && . /etc/bash_completion
+
+### Disable CTRL-S and CTRL-Q
+[[ $- =~ i ]] && stty -ixoff -ixon
+
+# When the shell exits, append to the history file instead of overwriting it
+shopt -s histappend
+
+# Environment variables
+# --------------------------------------------------------------------
+
+[ -z "$TMPDIR" ] && TMPDIR=/tmp
+
+# global
+export EDITOR=nvim
+export PATH=~/bin:~/.local/bin:$PATH
+unset LC_ALL
+export LANG=C.UTF-8
+
+# Aliases
+# --------------------------------------------------------------------
+
+alias cd..='cd ..'
+alias which='type -p'
+alias beep='echo -en "\007"'
+alias lvim='vim -u NONE'
+alias vim='nvim'
+
+if [ -x /$HOME/.cargo/bin/exa ]; then
+	#alias ls='lsd -lh --color never --header'
+	#alias ls='exa -lh'
+	alias ls='eza -lh --icons --no-user'
+fi
+
+# Prompt
+# --------------------------------------------------------------------
+
+# rg
+Rg() {
+	local selected=$(
+	rg --column --line-number --no-heading --color=always --smart-case "$1" |
+		fzf --ansi \
+		--delimiter : \
+		--preview 'bat --style=full --color=always --highlight-line {2} {1}' \
+		--preview-window '~3:+{2}+3/2'
+	)
+	[ -n "$selected" ] && $EDITOR "$selected"
+}
+
+
+RG() {
+  RG_PREFIX="rg --column --line-number --no-heading --color=always --smart-case "
+  INITIAL_QUERY="$1"
+  local selected=$(
+    FZF_DEFAULT_COMMAND="$RG_PREFIX '$INITIAL_QUERY' || true" \
+      fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+          --ansi --disabled --query "$INITIAL_QUERY" \
+          --delimiter : \
+          --preview 'bat --style=full --color=always --highlight-line {2} {1}' \
+          --preview-window '~3:+{2}+3/2'
+  )
+  [ -n "$selected" ] && $EDITOR "$selected"
+}
+
+fzf-down() {
+  fzf --height 50% --min-height 20 --border --bind ctrl-/:toggle-preview "$@"
+}
+
+export FZF_TMUX_OPTS='-p80%,60%'
+export FZF_CTRL_R_OPTS="
+  --preview 'echo {}' --preview-window down:3:hidden:wrap
+  --bind 'ctrl-/:toggle-preview'
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --color header:italic
+  --header 'Press CTRL-Y to copy command into clipboard'"
+
+if command -v fd > /dev/null; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+  export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
+  export FZF_CTRL_T_COMMAND='fd --type f --type d --hidden --follow --exclude .git'
+fi
+
+
+source ~/tools/fzf-tab-completion/bash/fzf-bash-completion.sh
+bind -x '"\t": fzf_bash_completion' 2>/dev/null
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+#mocha Use bash-completion, if available
+[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
+    . /usr/share/bash-completion/bash_completion
+
+
+set -h
+#set -o vi
+#bind -m vi-command 'Control-l: clear-screen'
+#bind -m vi-insert 'Control-l: clear-screen'
+export PATH=$PATH:/usr/local/go/bin
+. "$HOME/.cargo/env"
+
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# nix configuration
+if [[ $- == *i* ]]; then  # check if interactive shell
+   if [ -x "$HOME/bin/nix-enter" ]; then
+      if [ ! -e /nix/var/nix/profiles ] || [ -z ${NIX_ENTER} ]; then
+         export NIX_ENTER="TRUE"
+         exec "$HOME/bin/nix-enter"
+      fi
+   fi
+fi
+
+
+complete -o nospace -F _filedir_xspec nvim
+[ -f ~/.arista_bashrc ] && . ~/.arista_bashrc
+[ -f ~/.config/catppuccin-fzf/themes/catppuccin-fzf-latte.sh ] && . ~/.config/catppuccin-fzf/themes/catppuccin-fzf-latte.sh
+eval -- "$(/home/sushrut/.cargo/bin/starship init bash)"
+eval "$(zoxide init bash)"
