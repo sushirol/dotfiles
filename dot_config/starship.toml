@@ -1,0 +1,106 @@
+format = """
+$container$custom:$directory
+$character
+"""
+
+palette = 'catpuccino'
+
+[palettes.catpuccino]
+rosewater = '#dc8a78'
+flamingo = '#dd7878'
+peach = '#fe640b'
+yellow = '#df8e1d'
+green = '#40a02b'
+teal = '#179299'
+blue = '#1e66f5'
+lavender = '#8142dd'
+maroon = '#e64553'
+text = '#4c4f69'
+
+[character]
+success_symbol = "[❯](teal)"
+error_symbol = "[❯](rosewater)"
+
+# Use a custom module instead
+[custom.container_hostname]
+when = '[[ -n "$WP" ]]'
+command = 'echo $MY_HOSTNAME'
+format = '[$output](flamingo) '
+shell = ['sh']
+
+[custom.host_hostname]
+when = '[[ -z "$WP" ]]'
+command = 'hostname -s'
+format = '[$output](lavender) '
+shell = ['sh']
+
+
+#[custom.hostname]
+#command = 'echo $MY_HOSTNAME'
+#when = 'echo $WP'
+#format = '[$output](lavender)'
+
+[c]
+format = "[$symbol($version )]($style)"
+symbol = " "
+
+[directory]
+read_only = " "
+style = "teal"
+truncation_length = 1
+truncation_symbol = "/"
+fish_style_pwd_dir_length = 1
+
+[container]
+symbol = " "
+style = "cyan"
+format = "[$symbol$context]($style)"
+
+[os]
+disabled = false
+
+[os.symbols]
+Alpine = " "
+Amazon = " "
+Android = " "
+Arch = " "
+CentOS = " "
+Debian = " "
+DragonFly = " "
+Emscripten = " "
+EndeavourOS = " "
+Fedora = " "
+FreeBSD = " "
+Garuda = "﯑ "
+Gentoo = " "
+HardenedBSD = "ﲊ "
+Illumos = " "
+Linux = " "
+Macos = " "
+Manjaro = " "
+Mariner = " "
+MidnightBSD = " "
+Mint = " "
+NetBSD = " "
+NixOS = " "
+OpenBSD = " "
+openSUSE = " "
+OracleLinux = " "
+Pop = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Redox = " "
+Solus = "ﴱ "
+SUSE = " "
+Ubuntu = " "
+Unknown = " "
+Windows = " "
+
+[package]
+symbol = " "
+format = "[$symbol($version )]($style)"
+
+[python]
+symbol = " "
+format = "[$symbol($version )]($style)"
