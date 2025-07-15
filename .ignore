@@ -1,7 +1,0 @@
-linux-4.10.1
-linux-4.14
-tags
-supported_host
-.unc-backup*
-cscope.out
-*.o
